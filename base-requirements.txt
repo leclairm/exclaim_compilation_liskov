@@ -1,2 +1,2 @@
 # VCS
-gt4py @ git+https://github.com/GridTools/gt4py.git@icon4py_20240521 
+gt4py @ git+https://github.com/GridTools/gt4py.git@v1.0.4 
