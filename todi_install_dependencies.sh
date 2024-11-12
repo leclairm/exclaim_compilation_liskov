@@ -7,10 +7,11 @@ source ./todi_env.sh
 
 
 # Default branches if not provided
-icon_branch="grace-hopper"
-icon4py_branch="v0.0.11"
-gt4py_branch="icon4py_20240521"
-gridtools_branch="v2.3.4"
+icon_branch="icon-dsl"
+icon4py_branch="main"
+gt4py_branch="main"
+gridtools_branch="master"
+
 
 while [ "$1" != "" ]; do
     case $1 in
@@ -36,13 +37,13 @@ done
 
 # Clone with specific branches
 
-git clone -b $icon_branch git@github.com:C2SM/icon-exclaim.git
-cp -r todi_nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/ 
-cp -r todi_env.sh icon-exclaim/config/cscs/
-git clone -b $icon4py_branch git@github.com:C2SM/icon4py.git
-cp -r base-requirements.txt icon4py  
-git clone -b $gt4py_branch https://github.com/GridTools/gt4py.git
-git clone -b $gridtools_branch https://github.com/GridTools/gridtools.git
+#git clone -b $icon_branch git@github.com:C2SM/icon-exclaim.git
+#cp -r todi_nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/ 
+#cp -r todi_env.sh icon-exclaim/config/cscs/
+#git clone -b $icon4py_branch git@github.com:C2SM/icon4py.git
+#cp -r base-requirements.txt icon4py  
+#git clone -b $gt4py_branch https://github.com/GridTools/gt4py.git
+#git clone -b $gridtools_branch https://github.com/GridTools/gridtools.git
 
 
 

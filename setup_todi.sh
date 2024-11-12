@@ -28,13 +28,13 @@ LOC_GRIDTOOLS=${root_path}/gridtools/
     # Compile and run ICON based on the build type
 pushd icon-exclaim
 #        Sorry this has to be manually done due to issues with git via ssh or https 
-       git submodule update --init --recursive   
+#       git submodule update --init --recursive   
 
-    pushd externals
-      pushd ecrad
-         git apply ../../ecrad_patch.diff
-      popd
-    popd
+#    pushd externals
+#      pushd ecrad
+#         git apply ../../ecrad_patch.diff
+#      popd
+#    popd
 
 
    mkdir -p build_dsl

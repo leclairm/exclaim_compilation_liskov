@@ -64,7 +64,7 @@ CXX='mpicxx'
 
 FC='mpif90'
 FCFLAGS="-g -traceback -O -Mrecursive -Mallocatable=03 -Mbackslash -Mstack_arrays -acc=verystrict -gpu=cc90 -Minfo=accel,inline ${SERIALBOXI} ${ECCODESI} ${NETCDFFI} -D__USE_G2G -D__SWAPDIM "
-LDFLAGS="-L${uenv_view_path}/lib64 -L${uenv_view_path}/lib -L${XML2_ROOT}/lib -nvmalloc"
+LDFLAGS="-L${uenv_view_path}/lib64 -L${uenv_view_path}/lib -L${XML2_ROOT}/lib"
 DSL_LDFLAGS="-L${uenv_view_path}/lib64 -L${uenv_view_path}/lib"
 #LDFLAGS="-L${CUDA_HOME}/lib64 -L${SERIALBOX2_ROOT}/lib -L${ECCODES_ROOT}/lib64 -L${XML2_ROOT}/lib -L${NETCDF}/lib -L${NETCDFMINFORTRAN}/lib"
 
