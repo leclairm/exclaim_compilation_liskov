@@ -8,8 +8,8 @@ source ./todi_env.sh
 
 # Default branches if not provided
 icon_branch="icon-dsl"
-icon4py_branch="v0.0.13"
-gt4py_branch="v1.0.4"
+icon4py_branch="v0.0.14"
+gt4py_branch="icon4py_20241113"
 gridtools_branch="v2.3.7"
 
 
