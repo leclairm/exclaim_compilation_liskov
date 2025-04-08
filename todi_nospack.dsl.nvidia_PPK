@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ./todi_env.sh
-
 set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
@@ -12,7 +10,7 @@ DSL_DIR="${ICON_DIR}/dsl"
 
 ##  PPK edits
 
-uenv_view_path="/user-environment/env/icon/"
+uenv_view_path="/user-environment/env/${VIEW}"
 
 
 
@@ -49,11 +47,11 @@ STDCPP_LIBS='-c++libs'
 
 ################################################################################
 
-BUILD_ENV="source ${uenv_view_path}/activate.sh; export LD_LIBRARY_PATH=\"/user-environment/env/icon/lib64:\${LD_LIBRARY_PATH}\";"
-
+# - ML - test
+BUILD_ENV="source ${uenv_view_path}/activate.sh; export LD_LIBRARY_PATH=\"/user-environment/env/${VIEW}/lib64:\${LD_LIBRARY_PATH}\";"
 
 # We need some of the environment variables set by the modules now:
-eval "$BUILD_ENV"
+# eval "$BUILD_ENV"
 
 NETCDFFI="-I${uenv_view_path}/include"
 

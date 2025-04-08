@@ -1,10 +1,6 @@
 #!/bin/bash -l 
 set -e -x
 
-# core dependencies
-source ./todi_env.sh
-
-
 
 # Default branches if not provided
 icon_branch="reverse_advection"
@@ -37,24 +33,29 @@ done
 
 # Clone with specific branches
 
-git clone -b $icon_branch git@github.com:C2SM/icon-exclaim.git
-cp -r todi_nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/ 
-cp -r todi_env.sh icon-exclaim/config/cscs/
-git clone -b $icon4py_branch git@github.com:C2SM/icon4py.git
+git clone --depth 1 --recurse-submodules --shallow-submodules -b $icon_branch git@github.com:C2SM/icon-exclaim.git
+cp -r todi_nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/
+git clone --depth 1 -b $icon4py_branch git@github.com:C2SM/icon4py.git
 cp -r base-requirements.txt icon4py  
 cp -r requirements.txt icon4py
-git clone -b $gt4py_branch https://github.com/GridTools/gt4py.git
-git clone -b $gridtools_branch https://github.com/GridTools/gridtools.git
-
-
+git clone --depth 1 -b $gt4py_branch https://github.com/GridTools/gt4py.git
+git clone --depth 1 -b $gridtools_branch https://github.com/GridTools/gridtools.git
 
 pushd icon4py
-    python3.10 -m venv .venv
-    source .venv/bin/activate
-    pip install --upgrade wheel
-    pip install --upgrade pip
-    pip install -r requirements.txt
+
+# - ML - use uv
+uv --version || exit 1
+uv venv --python $(python --version | awk '{print $2}')
+uv pip install --upgrade wheel
+uv pip install --upgrade pip
+uv pip install -r requirements.txt
+
+# python3.10 -m venv .venv
+# source .venv/bin/activate
+# pip install --upgrade wheel
+# pip install --upgrade pip
+# pip install -r requirements.txt
+
 popd
 
-deactivate
-
+# deactivate
