@@ -43,9 +43,9 @@ The `launch_build_liskov.sh` script creates a working directory in a default loc
 Check the usage with `./launch_build_liskov.sh -h`
 
 ```
-❯ ./launh_build_liskov.sh -h
+❯ ./launch_build_liskov.sh -h
 
-Usage: build_liskov.sh REQUIRED_PARAMETERS OPTIONS
+Usage: launch_build_liskov.sh REQUIRED_PARAMETERS OPTIONS
 
 REQUIRED_PARAMETERS
   -u UENV,--uenv=UENV: activate UENV when building
