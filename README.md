@@ -5,6 +5,7 @@ These instructions are valid on `santis` out of the box. On `balfrin`, they requ
 ## Step by step
 
 1.  Start a user environment with the correct view activated
+
 For instance
 ``` shell
 uenv start icon-wcp/v1:rc4 --view=icon
