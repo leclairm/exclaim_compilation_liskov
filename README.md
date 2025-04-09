@@ -38,12 +38,12 @@ Then export the view used so that following scripts have access to it:
 
 ## Run the wrapper script
 
-The `build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup`, choosing a working sub-directory or choosing alternative icon repo/branch
+The `launch_build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup`, choosing a working sub-directory or choosing alternative icon repo/branch
 
-Check the usage with `./build_liskov.sh -h`
+Check the usage with `./launch_build_liskov.sh -h`
 
 ```
-❯ ./build_liskov.sh -h
+❯ ./launh_build_liskov.sh -h
 
 Usage: build_liskov.sh REQUIRED_PARAMETERS OPTIONS
 
