@@ -30,7 +30,7 @@ Then export the view used so that following scripts have access to it:
 ./setup.sh
 ```
 
-4. Check if the `build_dsl/bin/icon` executable was generated 
+4. Check that the `build_dsl/bin/icon` executable was generated 
 
 ## Run the wrapper script
 
