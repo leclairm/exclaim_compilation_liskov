@@ -2,7 +2,11 @@
 
 These instructions are valid on `santis` out of the box. On `balfrin`, they require the installation of `uenv` version `7.0.0` and `uv`.
 
-## Step by step
+## Clone this repo
+
+Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the wrapper script.
+
+## Step by step procedure
 
 1.  Start a user environment with the correct view activated. also export the view as `${VIEW}` used so that following scripts have access to it. 
 
@@ -21,7 +25,7 @@ Then export the view used so that following scripts have access to it:
 2. Install dependencies
 
 ``` shell
-./install_dependencies.sh
+./install_dependencies.sh [OPTIONS]
 ```
 
 3. Configure and build
@@ -34,7 +38,7 @@ Then export the view used so that following scripts have access to it:
 
 ## Run the wrapper script
 
-The `build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup` or choosing a working sub-directory.
+The `build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup`, choosing a working sub-directory or choosing alternative icon repo/branch
 
 Check the usage with `./build_liskov.sh -h`
 
@@ -49,10 +53,13 @@ REQUIRED_PARAMETERS
 
 OPTIONS
   -h,--help: print this help
-  -n,--nohup: run in the background. caution: process cannot be stoped
+  -n,--nohup: run in the background. Caution: process cannot be stoped
   -s,--submit: submit build to compute node
   -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
   -w WORKDIR,--workdir=WORKDIR: build in ${SCRATCH}/build_icon-exclaim_PKK/WORKDIR
                                 otherwise directly in ${SCRATCH}/build_icon-exclaim_PKK
+  --icon-repo=ICON_REPO: provide an icon repository (default: git@github.com:C2SM/icon-exclaim.git)
+  --icon-branch=ICON_BRANCH: provide an icon branch (default: reverse_advection)
+                             required when using --icon-repo
 ```
 

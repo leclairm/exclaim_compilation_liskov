@@ -2,6 +2,7 @@
 set -e -x
 
 # Default branches if not provided
+icon_repo="git@github.com:C2SM/icon-exclaim.git"
 icon_branch="reverse_advection"
 icon4py_branch="v0.0.14"
 gt4py_branch="icon4py_20241113"
@@ -9,26 +10,29 @@ gridtools_branch="v2.3.7"
 
 while [ "$1" != "" ]; do
     case $1 in
-        --icon )       shift
-                       icon_branch=$1
-                       ;;
-        --icon4py )    shift
-                       icon4py_branch=$1
-                       ;;
-        --gt4py )      shift
-                       gt4py_branch=$1
-                       ;;
-        --gridtools )  shift
-                       gridtools_branch=$1
-                       ;;
-        * )            echo "Invalid option"
-                       exit 1
+        --icon-repo )   shift
+                        icon_repo=$1
+                        ;;
+        --icon-branch ) shift
+                        icon_branch=$1
+                        ;;
+        --icon4py )     shift
+                        icon4py_branch=$1
+                        ;;
+        --gt4py )       shift
+                        gt4py_branch=$1
+                        ;;
+        --gridtools )   shift
+                        gridtools_branch=$1
+                        ;;
+        * )             echo "Invalid option"
+                        exit 1
     esac
     shift
 done
 
 # Clone with specific branches
-git clone --depth 1 --recurse-submodules --shallow-submodules -b $icon_branch git@github.com:C2SM/icon-exclaim.git
+git clone --depth 1 --recurse-submodules --shallow-submodules -b $icon_branch $icon_repo
 cp -r nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/
 git clone --depth 1 -b $icon4py_branch git@github.com:C2SM/icon4py.git
 cp -r base-requirements.txt icon4py  

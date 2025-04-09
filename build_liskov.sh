@@ -4,6 +4,8 @@ WORK_DIR=${SCRATCH}/build_icon-exclaim_PKK
 SUBMIT=false
 NOHUP=false
 SBATCH="sbatch"
+DEFAULT_ICON_REPO="git@github.com:C2SM/icon-exclaim.git"
+DEFAULT_ICON_BRANCH="reverse_advection"
 
 usage(){
     echo ""
@@ -15,11 +17,14 @@ usage(){
     echo ""
     echo "OPTIONS"
     echo "  -h,--help: print this help"
-    echo "  -n,--nohup: run in the background. caution: process cannot be stoped"
+    echo "  -n,--nohup: run in the background. Caution: process cannot be stoped"
     echo "  -s,--submit: submit build to compute node"
     echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
     echo "  -w WORKDIR,--workdir=WORKDIR: build in \${SCRATCH}/build_icon-exclaim_PKK/WORKDIR"
     echo "                                otherwise directly in \${SCRATCH}/build_icon-exclaim_PKK"
+    echo "  --icon-repo=ICON_REPO: provide an icon repository (default: ${DEFAULT_ICON_REPO})"
+    echo "  --icon-branch=ICON_BRANCH: provide an icon branch (default: ${DEFAULT_ICON_BRANCH})"
+    echo "                             required when using --icon-repo"
     echo ""
 }
 
@@ -45,11 +50,22 @@ while [ "$#" -gt 0 ]; do
     --view=*) VIEW="${1#*=}"; shift 1;;
     --account=*) SBATCH="${SBATCH} --account ${1#*=}"; shift 1;;
     --workdir=*) WORK_DIR="${WORK_DIR}/${1#*=}"; shift 1;;
+    --icon-repo=*) ICON_REPO="${1#*=}"; shift 1;;
+    --icon-branch=*) ICON_BRANCH="${1#*=}"; shift 1;;
     --uenv|--view|--account|--work_dir) usage; echo "ERROR: $1 requires an argument with ${1}=VALUE" >&2; exit 1;;
 
     *) usage; echo "ERROR: unknown option: $1" >&2; exit 1;;
   esac
 done
+
+if [[ -n ${ICON_REPO} && -z ${ICON_BRANCH} ]]; then
+   usage
+   echo "ERROR: --icon-repo also needs --icon-branch to be specified"
+   exit 1
+fi
+
+${ICON_REPO:=${DEFAULT_ICON_REPO}}
+${ICON_BRANCH:=${DEFAULT_ICON_BRANCH}}
 
 if [[ -z ${UENV} || -z ${VIEW} ]]; then
     usage
@@ -88,7 +104,7 @@ cat <<EOB > ${BUILD_SCRIPT}
 
 export VIEW=${VIEW}
 
-./install_dependencies.sh || exit 1
+./install_dependencies.sh --icon-repo ${ICON_REPO} --icon-branch ${ICON_BRANCH}  || exit 1
 ./setup.sh || exit 1
 
 EOB
