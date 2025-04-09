@@ -1,6 +1,6 @@
 #!/bin/bash
 
-WORK_DIR=${SCRATCH}/build_icon-exclaim_PKK
+ROOT_WORK_DIR="${SCRATCH}/build_exclaim_liskov"
 SUBMIT=false
 NOHUP=false
 SBATCH="sbatch"
@@ -20,8 +20,8 @@ usage(){
     echo "  -n,--nohup: run in the background. Caution: process cannot be stoped"
     echo "  -s,--submit: submit build to compute node"
     echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
-    echo "  -w WORKDIR,--workdir=WORKDIR: build in \${SCRATCH}/build_icon-exclaim_PKK/WORKDIR"
-    echo "                                otherwise directly in \${SCRATCH}/build_icon-exclaim_PKK"
+    echo "  -w WORKDIR,--workdir=WORKDIR: build in ${ROOT_WORK_DIR}/WORKDIR"
+    echo "                                otherwise directly in ${ROOT_WORK_DIR}"
     echo "  --icon-repo=ICON_REPO: provide an icon repository (default: ${DEFAULT_ICON_REPO})"
     echo "  --icon-branch=ICON_BRANCH: provide an icon branch (default: ${DEFAULT_ICON_BRANCH})"
     echo "                             required when using --icon-repo"
@@ -49,7 +49,7 @@ while [ "$#" -gt 0 ]; do
     --uenv=*) UENV="${1#*=}"; shift 1;;
     --view=*) VIEW="${1#*=}"; shift 1;;
     --account=*) SBATCH="${SBATCH} --account ${1#*=}"; shift 1;;
-    --workdir=*) WORK_DIR="${WORK_DIR}/${1#*=}"; shift 1;;
+    --workdir=*) SUB_WORK_DIR="${1#*=}"; shift 1;;
     --icon-repo=*) ICON_REPO="${1#*=}"; shift 1;;
     --icon-branch=*) ICON_BRANCH="${1#*=}"; shift 1;;
     --uenv|--view|--account|--work_dir|--icon-repo|--icon-branch)
@@ -70,6 +70,8 @@ fi
 
 ${ICON_REPO:=${DEFAULT_ICON_REPO}}
 ${ICON_BRANCH:=${DEFAULT_ICON_BRANCH}}
+WORK_DIR="${ROOT_WORK_DIR}"
+[[ -n ${SUB_WORK_DIR} ]] && WORK_DIR="${WORK_DIR}/${SUB_WORK_DIR}"
 
 if [[ -z ${UENV} || -z ${VIEW} ]]; then
     usage
@@ -93,7 +95,7 @@ rsync -av --exclude build_liskov.sh --exclude README.md ./ ${WORK_DIR}/
 
 pushd ${WORK_DIR} 2>&1 > /dev/null || exit 1
 
-BUILD_SCRIPT=build_icon-exclaim-pkk.sh
+BUILD_SCRIPT=build_liskov.sh
 
 cat <<EOB > ${BUILD_SCRIPT}
 #!/bin/bash
