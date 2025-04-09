@@ -36,4 +36,23 @@ Then export the view used so that following scripts have access to it:
 
 The `build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup` or choosing a working sub-directory.
 
-Check `./build_liskov.sh -h` for the usage. 
+Check the usage with `./build_liskov.sh -h`
+
+```
+❯ ./build_liskov.sh -h
+
+Usage: build_liskov.sh REQUIRED_PARAMETERS OPTIONS
+
+REQUIRED_PARAMETERS
+  -u UENV,--uenv=UENV: activate UENV when building
+  -v VIEW,--view=VIEW: Use the view VIEW of UENV
+
+OPTIONS
+  -h,--help: print this help
+  -n,--nohup: run in the background. caution: process cannot be stoped
+  -s,--submit: submit build to compute node
+  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
+  -w WORKDIR,--workdir=WORKDIR: build in ${SCRATCH}/build_icon-exclaim_PKK/WORKDIR
+                                otherwise directly in ${SCRATCH}/build_icon-exclaim_PKK
+```
+
