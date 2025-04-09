@@ -1,15 +1,35 @@
-###    Steps for Compilation of ICON on Todi super computer (Praveen K Pothapakula)
+# Compiling icon-exclaim with Liskov substitution (Praveen K Pothapakula)
 
-#  Step - 1
-#
-# This build is specific to "icon-wcp/v1:rc4" , if you want other rc builds, You can check various images installed in todi for icon-exclaim compilation with the following command
-# a)   uenv start icon-wcp/v1:rc4 --view=icon
-# b)   Now your environment should be loaded. 
+These instructions are valid on `santis` out of the box. On `balfrin`, they require the installation of `uenv` version `7.0.0` and `uv`.
 
+## Step by step
 
-# Step -2
-# For installation you need the following shell scripts (a)  todi_env.sh, (b)  todi_install_dependencies.sh (c) setup_todi.sh (d) todi_nospack.dsl.nvidia_PPK  
-#
-#  a) ./todi_install_dependencies.sh       (installs all the dependencies used for compiling icon-exclaim, git clones icon-exclaim into the folder and updates all the submodules.)
-#  b) ./setup_todi.sh                 (Starts configuring and installing icon in "build_dsl" folder)
-#  c) Check if your "build_dsl/bin" has icon executable  
+1.  Start a user environment with the correct view activated
+For instance
+``` shell
+uenv start icon-wcp/v1:rc4 --view=icon
+```
+or
+``` shell
+uenv start /capstor/store/cscs/userlab/cwd01/leclairm/uenvs/images/icon_25.2_v2.sqfs --view=default
+```
+
+2. Install dependencies
+
+``` shell
+./install_dependencies.sh
+```
+
+3. Configure and build
+
+``` shell
+./setup.sh
+```
+
+4. Check if the `build_dsl/bin/icon` executable was generated 
+
+## Run the wrapper script
+
+The `build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup` or choosing a working sub-directory.
+
+Check `./build_liskov.sh -h` for the usage. 
