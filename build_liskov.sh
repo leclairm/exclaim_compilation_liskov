@@ -52,7 +52,11 @@ while [ "$#" -gt 0 ]; do
     --workdir=*) WORK_DIR="${WORK_DIR}/${1#*=}"; shift 1;;
     --icon-repo=*) ICON_REPO="${1#*=}"; shift 1;;
     --icon-branch=*) ICON_BRANCH="${1#*=}"; shift 1;;
-    --uenv|--view|--account|--work_dir) usage; echo "ERROR: $1 requires an argument with ${1}=VALUE" >&2; exit 1;;
+    --uenv|--view|--account|--work_dir|--icon-repo|--icon-branch)
+        usage
+        echo "ERROR: $1 requires an argument with ${1}=VALUE" >&2
+        exit 1
+        ;;
 
     *) usage; echo "ERROR: unknown option: $1" >&2; exit 1;;
   esac
