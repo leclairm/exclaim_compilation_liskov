@@ -1,0 +1,110 @@
+#!/bin/bash
+
+WORK_DIR=${SCRATCH}/build_icon-exclaim_PKK
+SUBMIT=false
+NOHUP=false
+SBATCH="sbatch"
+
+usage(){
+    echo ""
+    echo "Usage: $(basename $0) REQUIRED_PARAMETERS OPTIONS"
+    echo ""
+    echo "REQUIRED_PARAMETERS"
+    echo "  -u UENV,--uenv=UENV: activate UENV when building"
+    echo "  -v VIEW,--view=VIEW: Use the view VIEW of UENV"
+    echo ""
+    echo "OPTIONS"
+    echo "  -h,--help: print this help"
+    echo "  -n,--nohup: run in the background. caution: process cannot be stoped"
+    echo "  -s,--submit: submit build to compute node"
+    echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
+    echo "  -w WORKDIR,--workdir=WORKDIR: build in \${SCRATCH}/build_icon-exclaim_PKK/WORKDIR"
+    echo "                                otherwise directly in \${SCRATCH}/build_icon-exclaim_PKK"
+    echo ""
+}
+
+check_opt_val(){
+    if [[ "${2:0:1}" == "-" ]]; then
+        usage
+        echo "$1 expects a value, got option $2"
+        exit 1
+    fi
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    -h|--help) usage; exit 0;;
+    -n|--nohup) NOHUP=true; shift 1;;
+    -s|--submit) SUBMIT=true; shift 1;;
+    -a) check_opt_val "$1" "$2"; SBATCH="${SBATCH} --account $2"; shift 2;;
+    -u) check_opt_val "$1" "$2"; UENV="$2"; shift 2;;
+    -v) check_opt_val "$1" "$2"; VIEW="$2"; shift 2;;
+    -w) check_opt_val "$1" "$2"; WORK_DIR="${WORK_DIR}/$2"; shift 2;;
+
+    --uenv=*) UENV="${1#*=}"; shift 1;;
+    --view=*) VIEW="${1#*=}"; shift 1;;
+    --account=*) SBATCH="${SBATCH} --account ${1#*=}"; shift 1;;
+    --workdir=*) WORK_DIR="${WORK_DIR}/${1#*=}"; shift 1;;
+    --uenv|--view|--account|--work_dir) usage; echo "ERROR: $1 requires an argument with ${1}=VALUE" >&2; exit 1;;
+
+    *) usage; echo "ERROR: unknown option: $1" >&2; exit 1;;
+  esac
+done
+
+if [[ -z ${UENV} || -z ${VIEW} ]]; then
+    usage
+    echo "ERROR: uenv and view are required"
+    exit 1
+fi
+
+echo "build config"
+echo "------------"
+echo "  - Workdir: ${WORK_DIR}"
+echo "  - uenv: ${UENV}"
+echo "  - view: ${VIEW}"
+echo "  - submit build: ${SUBMIT}"
+echo "  - nohup execution: ${NOHUP}"
+echo ""
+
+mkdir -p ${WORK_DIR}
+
+rsync -av --exclude build_liskov.sh --exclude README.md --delete ./ ${WORK_DIR}/
+
+pushd ${WORK_DIR} 2>&1 > /dev/null || exit 1
+
+BUILD_SCRIPT=build_icon-exclaim-pkk.sh
+
+cat <<EOB > ${BUILD_SCRIPT}
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --constraint=gpu
+#SBATCH --time=01:00:00
+#SBATCH --output build_liskov.o
+#SBATCH --error build_liskov.o
+#SBATCH --uenv ${UENV}
+#SBATCH --view ${VIEW}
+
+export VIEW=${VIEW}
+
+./install_dependencies.sh || exit 1
+./setup.sh || exit 1
+
+EOB
+
+chmod 755 ${BUILD_SCRIPT}
+
+if [[ "${SUBMIT}" == "true" ]]; then
+    ${SBATCH} ${BUILD_SCRIPT}
+else
+    if [[ "${NOHUP}" == "true" ]]; then
+        WRAPPER_SCRIPT=wrapper.sh
+        cat <<EOW > ${WRAPPER_SCRIPT}
+uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}
+EOW
+        chmod 755 ${WRAPPER_SCRIPT}
+        nohup ./${WRAPPER_SCRIPT} 2>&1 > ${BUILD_SCRIPT%%.*}.o &
+    else
+        uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}
+    fi
+fi
