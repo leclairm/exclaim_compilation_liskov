@@ -67,8 +67,9 @@ echo "  - nohup execution: ${NOHUP}"
 echo ""
 
 mkdir -p ${WORK_DIR}
+rm -rf ${WORK_DIR}/*
 
-rsync -av --exclude build_liskov.sh --exclude README.md --delete ./ ${WORK_DIR}/
+rsync -av --exclude build_liskov.sh --exclude README.md ./ ${WORK_DIR}/
 
 pushd ${WORK_DIR} 2>&1 > /dev/null || exit 1
 
