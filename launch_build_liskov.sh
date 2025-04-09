@@ -95,7 +95,7 @@ rsync -av --exclude launch_build_liskov.sh --exclude README.md ./ ${WORK_DIR}/
 
 pushd ${WORK_DIR} 2>&1 > /dev/null || exit 1
 
-BUILD_SCRIPT=build_liskov.sh
+BUILD_SCRIPT="build_liskov.sh"
 
 cat <<EOB > ${BUILD_SCRIPT}
 #!/bin/bash
@@ -120,14 +120,13 @@ chmod 755 ${BUILD_SCRIPT}
 if [[ "${SUBMIT}" == "true" ]]; then
     ${SBATCH} ${BUILD_SCRIPT}
 else
+    COMMAND="uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}"
     if [[ "${NOHUP}" == "true" ]]; then
-        WRAPPER_SCRIPT=wrapper.sh
-        cat <<EOW > ${WRAPPER_SCRIPT}
-uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}
-EOW
+        WRAPPER_SCRIPT="wrapper.sh"
+        echo ${COMMAND} > ${WRAPPER_SCRIPT}
         chmod 755 ${WRAPPER_SCRIPT}
         nohup ./${WRAPPER_SCRIPT} 2>&1 > ${BUILD_SCRIPT%%.*}.o &
     else
-        uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}
+        ${COMMAND}
     fi
 fi
