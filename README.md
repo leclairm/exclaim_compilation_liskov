@@ -4,16 +4,19 @@ These instructions are valid on `santis` out of the box. On `balfrin`, they requ
 
 ## Step by step
 
-1.  Start a user environment with the correct view activated
+1.  Start a user environment with the correct view activated. also export the view as `${VIEW}` used so that following scripts have access to it. 
 
 For instance
 ``` shell
 uenv start icon-wcp/v1:rc4 --view=icon
+export VIEW=icon
 ```
 or
 ``` shell
 uenv start /capstor/store/cscs/userlab/cwd01/leclairm/uenvs/images/icon_25.2_v2.sqfs --view=default
+export VIEW=default
 ```
+Then export the view used so that following scripts have access to it:
 
 2. Install dependencies
 
