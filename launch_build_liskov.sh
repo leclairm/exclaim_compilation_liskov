@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ROOT_WORK_DIR="${SCRATCH}/build_exclaim_liskov"
+ROOT_WORK_DIR="${SCRATCH}/exclaim_compilation_liskov"
 SUBMIT=false
 NOHUP=false
 SBATCH="sbatch"

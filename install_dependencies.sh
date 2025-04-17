@@ -43,11 +43,12 @@ git clone --depth 1 -b $gridtools_branch https://github.com/GridTools/gridtools.
 pushd icon4py
 
 # - ML - use uv
+export UV_LINK_MODE=copy
 uv --version || exit 1
 uv venv --python $(python --version | awk '{print $2}')
 uv pip install --upgrade wheel
 uv pip install --upgrade pip
-uv pip install -r requirements.txt
+CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
 
 # python3.10 -m venv .venv
 # source .venv/bin/activate
