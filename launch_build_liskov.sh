@@ -44,7 +44,7 @@ while [ "$#" -gt 0 ]; do
     -a) check_opt_val "$1" "$2"; SBATCH="${SBATCH} --account $2"; shift 2;;
     -u) check_opt_val "$1" "$2"; UENV="$2"; shift 2;;
     -v) check_opt_val "$1" "$2"; VIEW="$2"; shift 2;;
-    -w) check_opt_val "$1" "$2"; WORK_DIR="${WORK_DIR}/$2"; shift 2;;
+    -w) check_opt_val "$1" "$2"; SUB_WORK_DIR="$2"; shift 2;;
 
     --uenv=*) UENV="${1#*=}"; shift 1;;
     --view=*) VIEW="${1#*=}"; shift 1;;
@@ -62,14 +62,16 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
+# ICON repo and branch
 if [[ -n ${ICON_REPO} && -z ${ICON_BRANCH} ]]; then
    usage
    echo "ERROR: --icon-repo also needs --icon-branch to be specified"
    exit 1
 fi
+: "${ICON_REPO:=${DEFAULT_ICON_REPO}}"
+: "${ICON_BRANCH:=${DEFAULT_ICON_BRANCH}}"
 
-${ICON_REPO:=${DEFAULT_ICON_REPO}}
-${ICON_BRANCH:=${DEFAULT_ICON_BRANCH}}
+# WORK_DIR
 WORK_DIR="${ROOT_WORK_DIR}"
 [[ -n ${SUB_WORK_DIR} ]] && WORK_DIR="${WORK_DIR}/${SUB_WORK_DIR}"
 
@@ -79,8 +81,11 @@ if [[ -z ${UENV} || -z ${VIEW} ]]; then
     exit 1
 fi
 
+# log configuration
 echo "build config"
 echo "------------"
+echo "  - icon repo: ${ICON_REPO}"
+echo "  - icon branch: ${ICON_BRANCH}"
 echo "  - Workdir: ${WORK_DIR}"
 echo "  - uenv: ${UENV}"
 echo "  - view: ${VIEW}"
