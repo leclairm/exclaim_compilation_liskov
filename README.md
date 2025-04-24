@@ -8,7 +8,7 @@ Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the 
 
 ## Step by step procedure
 
-1.  Start a user environment with the correct view activated. also export the view as `${VIEW}` used so that following scripts have access to it. 
+1.  Start a user environment with the correct view activated. also export the view used as `${VIEW}` so that following scripts have access to it. 
 
 For instance
 ``` shell
