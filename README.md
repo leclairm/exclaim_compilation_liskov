@@ -20,7 +20,6 @@ or
 uenv start /capstor/store/cscs/userlab/cwd01/leclairm/uenvs/images/icon_25.2_v2.sqfs --view=default
 export VIEW=default
 ```
-Then export the view used so that following scripts have access to it:
 
 2. Install dependencies
 
