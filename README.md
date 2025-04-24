@@ -42,7 +42,7 @@ The `launch_build_liskov.sh` script creates a working directory in a default loc
 Check the usage with `./launch_build_liskov.sh -h`
 
 ```
-❯ ./launch_build_liskov.sh -h
+❯ launch_build_liskov.sh -h
 
 Usage: launch_build_liskov.sh REQUIRED_PARAMETERS OPTIONS
 
@@ -55,8 +55,8 @@ OPTIONS
   -n,--nohup: run in the background. Caution: process cannot be stoped
   -s,--submit: submit build to compute node
   -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
-  -w WORKDIR,--workdir=WORKDIR: build in ${SCRATCH}/build_icon-exclaim_PKK/WORKDIR
-                                otherwise directly in ${SCRATCH}/build_icon-exclaim_PKK
+  -w WORKDIR,--workdir=WORKDIR: build in /capstor/scratch/cscs/leclairm/exclaim_compilation_liskov/WORKDIR
+                                otherwise directly in /capstor/scratch/cscs/leclairm/exclaim_compilation_liskov
   --icon-repo=ICON_REPO: provide an icon repository (default: git@github.com:C2SM/icon-exclaim.git)
   --icon-branch=ICON_BRANCH: provide an icon branch (default: reverse_advection)
                              required when using --icon-repo
