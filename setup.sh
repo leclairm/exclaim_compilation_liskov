@@ -23,15 +23,10 @@ LOC_GRIDTOOLS=${root_path}/gridtools/
 
 # Compile and run ICON based on the build type
 pushd icon-exclaim
-# Sorry this has to be manually done due to issues with git via ssh or https
 
 mkdir -p build_dsl
 pushd build_dsl
 
-
- #SERIALBOX2_ROOT=$SERIALBOX2_ROOT  \
- # XML2_ROOT=$XML2_ROOT \
- ECCODES_ROOT=${ECCODES_ROOT} \
  LOC_GT4PY=${LOC_GT4PY} \
  LOC_ICON4PY_ATM_DYN_ICONAM=${LOC_ICON4PY_ATM_DYN_ICONAM} \
  LOC_ICON4PY_ADVECTION=${LOC_ICON4PY_ADVECTION} \
@@ -40,7 +35,7 @@ pushd build_dsl
  LOC_ICON4PY_TOOLS=${LOC_ICON4PY_TOOLS} \
  LOC_ICON4PY_BIN=${LOC_ICON4PY_BIN} \
  LOC_GRIDTOOLS=${LOC_GRIDTOOLS} \
- ./../config/cscs/nospack.dsl.nvidia_PPK --disable-rte-rrtmgp --enable-liskov=substitute --disable-liskov-fused 
+ ./../config/cscs/build.nospack.dsl.nvidia.sh --disable-rte-rrtmgp --enable-liskov=substitute --disable-liskov-fused
 
 make -j20
 

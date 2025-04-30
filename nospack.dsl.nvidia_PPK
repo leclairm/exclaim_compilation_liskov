@@ -4,16 +4,15 @@ set -eu
 
 SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 ICON_DIR=$(cd "${SCRIPT_DIR}/../.."; pwd)
-DSL_DIR="${ICON_DIR}/dsl"
 
 ##  PPK edits
 
-uenv_view_path="/user-environment/env/${VIEW}"
+UENV_VIEW_PATH="/user-environment/env/${VIEW}"
 
 
 
 # Requirements
-XML2_ROOT="${uenv_view_path}"
+XML2_ROOT="${UENV_VIEW_PATH}"
 XML2_LIBS='-lxml2'
 
 if [ -z "${SERIALBOX2_ROOT+x}" ]; then
@@ -46,22 +45,22 @@ STDCPP_LIBS='-c++libs'
 ################################################################################
 
 # - ML - test
-BUILD_ENV="source ${uenv_view_path}/activate.sh; export LD_LIBRARY_PATH=\"/user-environment/env/${VIEW}/lib64:\${LD_LIBRARY_PATH}\";"
+BUILD_ENV="source ${UENV_VIEW_PATH}/activate.sh; export LD_LIBRARY_PATH=\"/user-environment/env/${VIEW}/lib64:\${LD_LIBRARY_PATH}\";"
 
 # We need some of the environment variables set by the modules now:
 # eval "$BUILD_ENV"
 
-NETCDFFI="-I${uenv_view_path}/include"
+NETCDFFI="-I${UENV_VIEW_PATH}/include"
 
 CC='mpicc'
 CFLAGS='-g -O2'
-CPPFLAGS="-I${XML2_ROOT}/include/libxml2 -I${uenv_view_path}/include"
+CPPFLAGS="-I${UENV_VIEW_PATH}/include/libxml2 -I${UENV_VIEW_PATH}/include"
 CXX='mpicxx'
 
 FC='mpif90'
 FCFLAGS="-g -traceback -O -Mrecursive -Mallocatable=03 -Mbackslash -Mstack_arrays -acc=verystrict -gpu=cc90 -Minfo=accel,inline ${SERIALBOXI} ${ECCODESI} ${NETCDFFI} -D__USE_G2G -D__SWAPDIM "
-LDFLAGS="-L${uenv_view_path}/lib64 -L${uenv_view_path}/lib -L${XML2_ROOT}/lib"
-DSL_LDFLAGS="-L${uenv_view_path}/lib64 -L${uenv_view_path}/lib"
+LDFLAGS="-L${UENV_VIEW_PATH}/lib64 -L${UENV_VIEW_PATH}/lib -L${XML2_ROOT}/lib"
+DSL_LDFLAGS="-L${UENV_VIEW_PATH}/lib64 -L${UENV_VIEW_PATH}/lib"
 #LDFLAGS="-L${CUDA_HOME}/lib64 -L${SERIALBOX2_ROOT}/lib -L${ECCODES_ROOT}/lib64 -L${XML2_ROOT}/lib -L${NETCDF}/lib -L${NETCDFMINFORTRAN}/lib"
 
 #LD_LIBRARY_PATH=/user-environment/env/default/lib64:$LD_LIBRARY_PATH

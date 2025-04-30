@@ -40,22 +40,25 @@ cp -r requirements.txt icon4py
 git clone --depth 1 -b $gt4py_branch https://github.com/GridTools/gt4py.git
 git clone --depth 1 -b $gridtools_branch https://github.com/GridTools/gridtools.git
 
+# copy buid script to build directory
+cp  nospack.dsl.nvidia.sh icon-exclaim/config/cscs/build.nospack.dsl.nvidia.sh
+
+# Install icon4py virtual environment
 pushd icon4py
-
-# - ML - use uv
-export UV_LINK_MODE=copy
-uv --version || exit 1
-uv venv --python $(python --version | awk '{print $2}')
-uv pip install --upgrade wheel
-uv pip install --upgrade pip
-CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
-
-# python3.10 -m venv .venv
-# source .venv/bin/activate
-# pip install --upgrade wheel
-# pip install --upgrade pip
-# pip install -r requirements.txt
-
+which uv > /dev/null 2>&1
+if [[ $? ==  0 ]]; then
+    export UV_LINK_MODE=copy
+    uv --version || exit 1
+    uv venv --python $(python --version | awk '{print $2}')
+    uv pip install --upgrade wheel
+    uv pip install --upgrade pip
+    CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
+else
+    python3.10 -m venv .venv
+    source .venv/bin/activate
+    pip install --upgrade wheel
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    deactivate
+fi
 popd
-
-# deactivate
