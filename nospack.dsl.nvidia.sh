@@ -38,7 +38,15 @@ DSL_LDFLAGS="-L${UENV_VIEW_PATH}/lib64 -L${UENV_VIEW_PATH}/lib"
 
 LIBS="-L${CUDA_HOME}/lib64 -lcudart -Wl,--as-needed ${XML2_LIBS} ${BLAS_LAPACK_LIBS} ${SERIALBOX2_LIBS} ${STDCPP_LIBS} ${NETCDF_LIBS}"
 
-CUDAARCHS='90'
+# CUDAARCHS is machine dependent
+if [[ "${HOSTNAME}" == balfrin* ]]; then
+    CUDAARCHS='80'
+elif [[ "${HOSTNAME}" == santis* ]]; then
+    CUDAARCHS='90'
+else
+    echo "unsupported host ${HOSTNAME}"
+    exit 1
+fi
 # NVCC='nvcc'
 # -G seems to break the build, at least it does on tsa
 GT4PYNVCFLAGS='--std=c++17 -arch=sm_90 -g -O3 -lineinfo'
