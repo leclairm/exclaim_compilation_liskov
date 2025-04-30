@@ -131,6 +131,7 @@ else
         echo ${COMMAND} > ${WRAPPER_SCRIPT}
         chmod 755 ${WRAPPER_SCRIPT}
         nohup ./${WRAPPER_SCRIPT} 2>&1 > ${BUILD_SCRIPT%%.*}.o &
+        echo "running in the background, follow build with \"tail -f $(realpath ${BUILD_SCRIPT%%.*}.o)\""
     else
         ${COMMAND}
     fi

@@ -8,10 +8,14 @@ ICON_DIR=$(cd "${SCRIPT_DIR}/../.."; pwd)
 
 UENV_VIEW_PATH="/user-environment/env/${VIEW}"
 
-# Uncomment to unuse
+# Uncomment to use
 # SERIALBOX2_LIBS='-lSerialboxFortran -lSerialboxC -lSerialboxCore'
 # SB2PP="python2 ${UENV_VIEW_PATH}/python/pp_ser/pp_ser.py"
-# ECCODES_LIBS='-leccodes'
+# ECCODES_LIBS='-leccodes' # - ML - appears unsued
+
+# - ML - to avoid failure because of set -u
+SERIALBOX2_LIBS=""
+SB2PP=""
 
 # Mandatory LIBS
 XML2_LIBS='-lxml2'
