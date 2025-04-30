@@ -33,7 +33,6 @@ done
 
 # Clone with specific branches
 git clone --depth 1 --recurse-submodules --shallow-submodules -b $icon_branch $icon_repo
-cp -r nospack.dsl.nvidia_PPK icon-exclaim/config/cscs/
 git clone --depth 1 -b $icon4py_branch git@github.com:C2SM/icon4py.git
 cp -r base-requirements.txt icon4py  
 cp -r requirements.txt icon4py
