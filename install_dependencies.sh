@@ -44,20 +44,23 @@ cp  nospack.dsl.nvidia.sh icon-exclaim/config/cscs/build.nospack.dsl.nvidia.sh
 
 # Install icon4py virtual environment
 pushd icon4py
-which uv > /dev/null 2>&1
-if [[ $? ==  0 ]]; then
-    export UV_LINK_MODE=copy
-    uv --version || exit 1
-    uv venv --python $(python --version | awk '{print $2}')
-    uv pip install --upgrade wheel
-    uv pip install --upgrade pip
-    CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
-else
+if [ "${USE_PIP}" == "true" ]; then
     python3.10 -m venv .venv
     source .venv/bin/activate
     pip install --upgrade wheel
     pip install --upgrade pip
     pip install -r requirements.txt
     deactivate
+else
+    if which uv > /dev/null 2>&1; then
+        echo "ERROR: no uv found"
+        exit 1
+    fi
+    export UV_LINK_MODE=copy
+    export UV_PYTHON="/user-environment/env/${VIEW}/bin/python"
+    uv venv --python $(python --version | awk '{print $2}')
+    uv pip install --upgrade wheel
+    uv pip install --upgrade pip
+    CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
 fi
 popd

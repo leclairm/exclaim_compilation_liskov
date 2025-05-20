@@ -4,6 +4,7 @@ ROOT_WORK_DIR_ESC="\${SCRATCH}/exclaim_compilation_liskov"
 eval "ROOT_WORK_DIR=${ROOT_WORK_DIR_ESC}"
 SUBMIT=false
 NOHUP=false
+USE_PIP="false"
 SBATCH="sbatch"
 DEFAULT_ICON_REPO="git@github.com:C2SM/icon-exclaim.git"
 DEFAULT_ICON_BRANCH="reverse_advection"
@@ -19,10 +20,11 @@ usage(){
     echo "OPTIONS"
     echo "  -h,--help: print this help"
     echo "  -n,--nohup: run in the background. Caution: process cannot be stoped"
+    echo "  --use-pip: use pip instead of uv"
     echo "  -s,--submit: submit build to compute node"
     echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
     echo "  -w WORKDIR,--workdir=WORKDIR: build in ${ROOT_WORK_DIR_ESC}/WORKDIR"
-    echo "                                otherwise directly in ${ROOT_WORK_DIR}"
+    echo "                                otherwise directly in ${ROOT_WORK_DIR_ESC}"
     echo "  --icon-repo=ICON_REPO: provide an icon repository (default: ${DEFAULT_ICON_REPO})"
     echo "  --icon-branch=ICON_BRANCH: provide an icon branch (default: ${DEFAULT_ICON_BRANCH})"
     echo "                             required when using --icon-repo"
@@ -42,6 +44,7 @@ while [ "$#" -gt 0 ]; do
     -h|--help) usage; exit 0;;
     -n|--nohup) NOHUP=true; shift 1;;
     -s|--submit) SUBMIT=true; shift 1;;
+    --use-pip) USE_PIP=true; shift 1;;
     -a) check_opt_val "$1" "$2"; SBATCH="${SBATCH} --account $2"; shift 2;;
     -u) check_opt_val "$1" "$2"; UENV="$2"; shift 2;;
     -v) check_opt_val "$1" "$2"; VIEW="$2"; shift 2;;
@@ -87,7 +90,8 @@ echo "build config"
 echo "------------"
 echo "  - icon repo: ${ICON_REPO}"
 echo "  - icon branch: ${ICON_BRANCH}"
-echo "  - Workdir: ${WORK_DIR}"
+echo "  - workdir: ${WORK_DIR}"
+echo "  - use pip: ${USE_PIP}"
 echo "  - uenv: ${UENV}"
 echo "  - view: ${VIEW}"
 echo "  - submit build: ${SUBMIT}"
@@ -115,6 +119,7 @@ cat <<EOB > ${BUILD_SCRIPT}
 #SBATCH --view ${VIEW}
 
 export VIEW=${VIEW}
+export USE_PIP=${USE_PIP}
 
 ./install_dependencies.sh --icon-repo ${ICON_REPO} --icon-branch ${ICON_BRANCH}  || exit 1
 ./setup.sh || exit 1
