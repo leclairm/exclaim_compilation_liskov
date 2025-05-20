@@ -52,15 +52,15 @@ if [ "${USE_PIP}" == "true" ]; then
     pip install -r requirements.txt
     deactivate
 else
-    if which uv > /dev/null 2>&1; then
+    if ! which uv > /dev/null 2>&1; then
         echo "ERROR: no uv found"
         exit 1
     fi
     export UV_LINK_MODE=copy
     export UV_PYTHON="/user-environment/env/${VIEW}/bin/python"
-    uv venv --python $(python --version | awk '{print $2}')
-    uv pip install --upgrade wheel
-    uv pip install --upgrade pip
-    CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
+    uv venv
+    uv pip install --target .venv --upgrade wheel
+    uv pip install --target .venv --upgrade pip
+    CC=nvc CFLAGS=-noswitcherror uv pip install --target .venv --no-cache -r requirements.txt
 fi
 popd
