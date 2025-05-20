@@ -57,10 +57,7 @@ else
         exit 1
     fi
     export UV_LINK_MODE=copy
-    export UV_PYTHON="/user-environment/env/${VIEW}/bin/python"
-    uv venv
-    uv pip install --target .venv --upgrade wheel
-    uv pip install --target .venv --upgrade pip
-    CC=nvc CFLAGS=-noswitcherror uv pip install --target .venv --no-cache -r requirements.txt
+    uv venv --python "$(realpath "$(which python)")"
+    CC=nvc CFLAGS=-noswitcherror uv pip install --no-cache -r requirements.txt
 fi
 popd
