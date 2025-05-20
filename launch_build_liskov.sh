@@ -1,6 +1,7 @@
 #!/bin/bash
 
-ROOT_WORK_DIR="${SCRATCH}/exclaim_compilation_liskov"
+ROOT_WORK_DIR_ESC="\${SCRATCH}/exclaim_compilation_liskov"
+eval "ROOT_WORK_DIR=${ROOT_WORK_DIR_ESC}"
 SUBMIT=false
 NOHUP=false
 SBATCH="sbatch"
@@ -20,7 +21,7 @@ usage(){
     echo "  -n,--nohup: run in the background. Caution: process cannot be stoped"
     echo "  -s,--submit: submit build to compute node"
     echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
-    echo "  -w WORKDIR,--workdir=WORKDIR: build in ${ROOT_WORK_DIR}/WORKDIR"
+    echo "  -w WORKDIR,--workdir=WORKDIR: build in ${ROOT_WORK_DIR_ESC}/WORKDIR"
     echo "                                otherwise directly in ${ROOT_WORK_DIR}"
     echo "  --icon-repo=ICON_REPO: provide an icon repository (default: ${DEFAULT_ICON_REPO})"
     echo "  --icon-branch=ICON_BRANCH: provide an icon branch (default: ${DEFAULT_ICON_BRANCH})"

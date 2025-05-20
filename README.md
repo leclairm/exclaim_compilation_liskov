@@ -12,15 +12,15 @@ Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the 
 
 For instance
 ``` shell
-uenv start icon-wcp/v1:rc4 --view=icon
-export VIEW=icon
-```
-or
-``` shell
-uenv start /capstor/store/cscs/userlab/cwd01/leclairm/uenvs/images/icon_25.2_v2.sqfs --view=default
+uenv start icon/25.2:v3 --view=default
 export VIEW=default
 ```
 
+or
+``` shell
+uenv start icon-wcp/v1:rc4 --view=icon
+export VIEW=icon
+```
 2. Install dependencies
 
 ``` shell
@@ -52,11 +52,11 @@ REQUIRED_PARAMETERS
 
 OPTIONS
   -h,--help: print this help
-  -n,--nohup: run in the background. Caution: process cannot be stoped
+  -n,--nohup: run in the background. Caution: process cannot be stopped
   -s,--submit: submit build to compute node
   -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
   -w WORKDIR,--workdir=WORKDIR: build in /capstor/scratch/cscs/leclairm/exclaim_compilation_liskov/WORKDIR
-                                otherwise directly in /capstor/scratch/cscs/leclairm/exclaim_compilation_liskov
+                                otherwise directly in ${SCRATCH}/exclaim_compilation_liskov
   --icon-repo=ICON_REPO: provide an icon repository (default: git@github.com:C2SM/icon-exclaim.git)
   --icon-branch=ICON_BRANCH: provide an icon branch (default: reverse_advection)
                              required when using --icon-repo
