@@ -4,6 +4,10 @@ The preferred strategy is the [launching script](#launching-script) described be
 
 ## Clone this repo
 
+``` shell
+git clone -b icon_blue https://github.com/leclairm/exclaim_compilation_liskov.git
+```
+
 Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the launching script approach.
 
 ## Step by step procedure
