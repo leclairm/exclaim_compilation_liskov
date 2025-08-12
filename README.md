@@ -52,17 +52,16 @@ Check the usage with `./launch_build_liskov.sh -h`
 Usage: launch_build_liskov.sh REQUIRED_PARAMETERS OPTIONS
 
 REQUIRED_PARAMETERS
-  --setup SETUP_FILE: use dependencies versions from SETUP_FILE
-  -u UENV,--uenv=UENV: activate UENV when building
-  -v VIEW,--view=VIEW: Use the view VIEW of UENV
+  -s SETUP_FILE, --setup=SETUP_FILE: use dependencies versions from SETUP_FILE
+  -u UENV, --uenv=UENV: activate UENV when building
+  -v VIEW, --view=VIEW: Use the view VIEW of UENV
 
 OPTIONS
-  -h,--help: print this help
-  -n,--nohup: run in the background. CAUTION: process cannot be stoped
+  -h, --help: print this help
+  -n, --nohup: run in the background. CAUTION: process cannot be stoped
   --use-pip: use pip instead of uv
-  -s,--submit: submit build to compute node
-  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
-  -w WORKDIR,--workdir=WORKDIR: build in ${SCRATCH}/exclaim_compilation_liskov/WORKDIR
-                                otherwise directly in ${SCRATCH}/exclaim_compilation_liskov
+  --submit ACCOUNT: submit build to compute node and use ACCOUNT
+  -w WORKDIR, --workdir=WORKDIR: build in ${SCRATCH}/exclaim_compilation_liskov/WORKDIR
+                                 otherwise directly in ${SCRATCH}/exclaim_compilation_liskov
 ```
 
