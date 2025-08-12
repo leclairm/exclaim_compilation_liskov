@@ -8,18 +8,16 @@ Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the 
 
 ## Step by step procedure
 
-1.  Start a user environment with the correct view activated. also export the view used as `${VIEW}` so that following scripts have access to it. 
+1.  Start a user environment with the correct view activated. 
 
 For instance
 ``` shell
 uenv start icon/25.2:v3 --view=default
-export VIEW=default
 ```
 
 or
 ``` shell
 uenv start icon-wcp/v1:rc4 --view=icon
-export VIEW=icon
 ```
 2. source setup
 ``` shell

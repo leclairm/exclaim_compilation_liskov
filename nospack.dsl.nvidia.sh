@@ -5,8 +5,9 @@ set -eu
 SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 ICON_DIR=$(cd "${SCRIPT_DIR}/../.."; pwd)
 
-
-UENV_VIEW_PATH="/user-environment/env/${VIEW}"
+[ -z ${UENV_VIEW} ] && (echo "ERROR: no uenv view loaded"; exit 1)
+UENV_VIEW_PATH="/user-environment/env/${UENV_VIEW##*:}"
+[ -d "${UENV_VIEW_PATH}" ] || (echo "ERROR: View path ${UENV_VIEW_PATH} not found")
 
 # Uncomment to use
 # SERIALBOX2_LIBS='-lSerialboxFortran -lSerialboxC -lSerialboxCore'

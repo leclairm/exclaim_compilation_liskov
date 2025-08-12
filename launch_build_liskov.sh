@@ -120,7 +120,6 @@ cat <<EOB >> ${BUILD_SCRIPT}
 
 set -e
 
-export VIEW=${VIEW}
 export USE_PIP=${USE_PIP}
 
 source ${SETUP}
@@ -145,6 +144,6 @@ else
         echo "running in the background, follow build  with the following command"
         echo "tail -f $(realpath ${BUILD_LOG})"
     else
-        ${COMMAND} 2>&1 | tee ${BUILD_LOG}
+        ${COMMAND} | tee ${BUILD_LOG}
     fi
 fi
