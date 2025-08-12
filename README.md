@@ -8,17 +8,8 @@ Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the 
 
 ## Step by step procedure
 
-1.  Start a user environment with the correct view activated. 
+1.  Start a user environment with the correct view activated, e.g. `uenv start icon/25.2:v3 --view=default` or `uenv start icon-wcp/v1:rc4 --view=icon`
 
-For instance
-``` shell
-uenv start icon/25.2:v3 --view=default
-```
-
-or
-``` shell
-uenv start icon-wcp/v1:rc4 --view=icon
-```
 2. source setup
 ``` shell
 source MY_SETUP.sh
