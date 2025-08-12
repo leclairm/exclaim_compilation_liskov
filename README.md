@@ -38,7 +38,7 @@ source MY_SETUP.sh
 ./setup.sh
 ```
 
-4. Check that the `build_dsl/bin/icon` executable was generated 
+5. Check that the `build_dsl/bin/icon` executable was generated 
 
 ## Launching script
 
