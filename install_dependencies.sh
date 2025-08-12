@@ -1,43 +1,43 @@
 #!/bin/bash -l 
 set -e -x
 
-# Default branches if not provided
-icon_repo="git@github.com:C2SM/icon-exclaim.git"
-icon_branch="reverse_advection"
-icon4py_branch="v0.0.14"
-gt4py_branch="icon4py_20241113"
-gridtools_branch="v2.3.7"
-
-while [ "$1" != "" ]; do
-    case $1 in
-        --icon-repo )   shift
-                        icon_repo=$1
-                        ;;
-        --icon-branch ) shift
-                        icon_branch=$1
-                        ;;
-        --icon4py )     shift
-                        icon4py_branch=$1
-                        ;;
-        --gt4py )       shift
-                        gt4py_branch=$1
-                        ;;
-        --gridtools )   shift
-                        gridtools_branch=$1
-                        ;;
-        * )             echo "Invalid option"
-                        exit 1
-    esac
-    shift
+# Check setup branches are set
+check_var_set(){
+   if eval "[ -z \${${1}+x} ]"; then
+       echo "ERROR: $1 not set"
+       exit 1
+   fi
+}
+for var in "ICON_REPO ICON_BRANCH ICON4PY_BRANCH GT4PY_BRANCH GRIDTOOLS_BRANCH"; do
+  check_var_set "${var}"
 done
 
 # Clone with specific branches
-git clone --depth 1 --recurse-submodules --shallow-submodules -b $icon_branch $icon_repo
-git clone --depth 1 -b $icon4py_branch git@github.com:C2SM/icon4py.git
-cp -r base-requirements.txt icon4py  
-cp -r requirements.txt icon4py
-git clone --depth 1 -b $gt4py_branch https://github.com/GridTools/gt4py.git
-git clone --depth 1 -b $gridtools_branch https://github.com/GridTools/gridtools.git
+git clone --depth 1 --recurse-submodules --shallow-submodules -b "${ICON_BRANCH}" "${ICON_REPO}"
+git clone --depth 1 -b "${ICON4PY_BRANCH}" git@github.com:C2SM/icon4py.git
+git clone --depth 1 -b "${GT4PY_BRANCH}" https://github.com/GridTools/gt4py.git
+git clone --depth 1 -b "${GRIDTOOLS_BRANCH}" https://github.com/GridTools/gridtools.git
+
+# Fix wrong requirements in icon4py v0.0.14
+if [ "${ICON4PY_BRANCH}" == "v0.0.14" ]; then
+    cat <<EOB > icon4py/requirements.txt
+-r base-requirements.txt
+
+# icon4py model
+./model/atmosphere/dycore
+./model/atmosphere/diffusion
+./model/atmosphere/advection
+./model/atmosphere/subgrid_scale_physics/microphysics
+./model/common[io]
+./model/driver
+
+# icon4pytools
+./tools
+EOB
+fi
+
+# Fix base-requirements
+echo "gt4py @ git+https://github.com/GridTools/gt4py.git@${GT4PY_BRANCH}" > icon4py/base-requirements.txt
 
 # copy buid script to build directory
 cp  nospack.dsl.nvidia.sh icon-exclaim/config/cscs/build.nospack.dsl.nvidia.sh

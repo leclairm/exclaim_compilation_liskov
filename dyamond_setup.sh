@@ -1,0 +1,5 @@
+export ICON_REPO="git@github.com:C2SM/icon-exclaim.git"
+export ICON_BRANCH="reverse_advection"
+export ICON4PY_BRANCH="v0.0.14"
+export GT4PY_BRANCH="icon4py_20241113"
+export GRIDTOOLS_BRANCH="v2.3.7"

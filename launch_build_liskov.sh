@@ -5,36 +5,31 @@ eval "ROOT_WORK_DIR=${ROOT_WORK_DIR_ESC}"
 SUBMIT=false
 NOHUP=false
 USE_PIP="false"
-SBATCH="sbatch"
-DEFAULT_ICON_REPO="git@github.com:C2SM/icon-exclaim.git"
-DEFAULT_ICON_BRANCH="reverse_advection"
+JSBACH="--disable-jsbach"
 
 usage(){
     echo ""
     echo "Usage: $(basename $0) REQUIRED_PARAMETERS OPTIONS"
     echo ""
     echo "REQUIRED_PARAMETERS"
-    echo "  -u UENV,--uenv=UENV: activate UENV when building"
-    echo "  -v VIEW,--view=VIEW: Use the view VIEW of UENV"
+    echo "  -s SETUP_FILE, --setup=SETUP_FILE: use dependencies versions from SETUP_FILE"
+    echo "  -u UENV, --uenv=UENV: activate UENV when building"
+    echo "  -v VIEW, --view=VIEW: Use the view VIEW of UENV"
     echo ""
     echo "OPTIONS"
-    echo "  -h,--help: print this help"
-    echo "  -n,--nohup: run in the background. Caution: process cannot be stoped"
+    echo "  -h, --help: print this help"
+    echo "  -n, --nohup: run in the background. CAUTION: process cannot be stoped"
     echo "  --use-pip: use pip instead of uv"
-    echo "  -s,--submit: submit build to compute node"
-    echo "  -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT"
-    echo "  -w WORKDIR,--workdir=WORKDIR: build in ${ROOT_WORK_DIR_ESC}/WORKDIR"
-    echo "                                otherwise directly in ${ROOT_WORK_DIR_ESC}"
-    echo "  --icon-repo=ICON_REPO: provide an icon repository (default: ${DEFAULT_ICON_REPO})"
-    echo "  --icon-branch=ICON_BRANCH: provide an icon branch (default: ${DEFAULT_ICON_BRANCH})"
-    echo "                             required when using --icon-repo"
+    echo "  --submit ACCOUNT: submit build to compute node and use ACCOUNT"
+    echo "  -w WORKDIR, --workdir=WORKDIR: build in ${ROOT_WORK_DIR_ESC}/WORKDIR"
+    echo "                                 otherwise directly in ${ROOT_WORK_DIR_ESC}"
     echo ""
 }
 
 check_opt_val(){
     if [[ "${2:0:1}" == "-" ]]; then
         usage
-        echo "$1 expects a value, got option $2"
+        echo "ERROR: $1 expects a value, got option $2"
         exit 1
     fi
 }
@@ -43,20 +38,18 @@ while [ "$#" -gt 0 ]; do
   case "$1" in
     -h|--help) usage; exit 0;;
     -n|--nohup) NOHUP=true; shift 1;;
-    -s|--submit) SUBMIT=true; shift 1;;
     --use-pip) USE_PIP=true; shift 1;;
-    -a) check_opt_val "$1" "$2"; SBATCH="${SBATCH} --account $2"; shift 2;;
+    -s) check_opt_val "$1" "$2"; SETUP="$2"; shift 2;;
     -u) check_opt_val "$1" "$2"; UENV="$2"; shift 2;;
     -v) check_opt_val "$1" "$2"; VIEW="$2"; shift 2;;
     -w) check_opt_val "$1" "$2"; SUB_WORK_DIR="$2"; shift 2;;
 
+    --setup=*) SETUP="${1#*=}"; shift 1;;
     --uenv=*) UENV="${1#*=}"; shift 1;;
     --view=*) VIEW="${1#*=}"; shift 1;;
-    --account=*) SBATCH="${SBATCH} --account ${1#*=}"; shift 1;;
+    --submit=*) SUBMIT_ACCOUNT="${1#*=}"; shift 1;;
     --workdir=*) SUB_WORK_DIR="${1#*=}"; shift 1;;
-    --icon-repo=*) ICON_REPO="${1#*=}"; shift 1;;
-    --icon-branch=*) ICON_BRANCH="${1#*=}"; shift 1;;
-    --uenv|--view|--account|--work_dir|--icon-repo|--icon-branch)
+    --uenv|--view|--submit|--work_dir|--setup)
         usage
         echo "ERROR: $1 requires an argument with ${1}=VALUE" >&2
         exit 1
@@ -66,46 +59,48 @@ while [ "$#" -gt 0 ]; do
   esac
 done
 
-# ICON repo and branch
-if [[ -n ${ICON_REPO} && -z ${ICON_BRANCH} ]]; then
-   usage
-   echo "ERROR: --icon-repo also needs --icon-branch to be specified"
-   exit 1
+# Check required options
+if [ -z ${SETUP} ]; then
+    usage
+    echo "ERROR: no setup chosen"
+    exit 1
 fi
-: "${ICON_REPO:=${DEFAULT_ICON_REPO}}"
-: "${ICON_BRANCH:=${DEFAULT_ICON_BRANCH}}"
-
-# WORK_DIR
-WORK_DIR="${ROOT_WORK_DIR}"
-[[ -n ${SUB_WORK_DIR} ]] && WORK_DIR="${WORK_DIR}/${SUB_WORK_DIR}"
-
-if [[ -z ${UENV} || -z ${VIEW} ]]; then
+if [ -z ${UENV} ] || [ -z ${VIEW} ]; then
     usage
     echo "ERROR: uenv and view are required"
     exit 1
 fi
 
+# WORK_DIR
+WORK_DIR="${ROOT_WORK_DIR}"
+[ -n ${SUB_WORK_DIR} ] && WORK_DIR="${WORK_DIR}/${SUB_WORK_DIR}"
+
 # log configuration
 echo "build config"
 echo "------------"
-echo "  - icon repo: ${ICON_REPO}"
-echo "  - icon branch: ${ICON_BRANCH}"
+echo "  - setup: ${SETUP}"
 echo "  - workdir: ${WORK_DIR}"
 echo "  - use pip: ${USE_PIP}"
 echo "  - uenv: ${UENV}"
 echo "  - view: ${VIEW}"
-echo "  - submit build: ${SUBMIT}"
-echo "  - nohup execution: ${NOHUP}"
+if [ -n "${SUBMIT_ACCOUNT}" ]; then
+    echo "  - submit build: true"
+    echo "  - submit account: ${SUBMIT_ACCOUNT}"
+else
+    echo "  - submit build: false"
+    echo "  - nohup execution: ${NOHUP}"
+fi
 echo ""
 
 mkdir -p ${WORK_DIR}
 rm -rf ${WORK_DIR}/*
 
-rsync -av --exclude $(basename $0) --exclude README.md ./ ${WORK_DIR}/
+rsync -av --exclude $(basename $0) --exclude README.md --exclude=".*" ./ ${WORK_DIR}/
 
 pushd ${WORK_DIR} 2>&1 > /dev/null || exit 1
 
 BUILD_SCRIPT="build_liskov.sh"
+BUILD_LOG="${BUILD_SCRIPT%%.*}.o"
 
 cat <<EOB > ${BUILD_SCRIPT}
 #!/bin/bash
@@ -113,32 +108,43 @@ cat <<EOB > ${BUILD_SCRIPT}
 #SBATCH --nodes=1
 #SBATCH --constraint=gpu
 #SBATCH --time=01:00:00
-#SBATCH --output build_liskov.o
-#SBATCH --error build_liskov.o
+#SBATCH --output ${BUILD_LOG}
+#SBATCH --error ${BUILD_LOG}
 #SBATCH --uenv ${UENV}
 #SBATCH --view ${VIEW}
+EOB
+
+[ -n "${SUBMIT_ACCOUNT}" ] && echo "#SBATCH --account ${SUBMIT_ACCOUNT}" >> ${BUILD_SCRIPT}
+
+cat <<EOB >> ${BUILD_SCRIPT}
+
+set -e
 
 export VIEW=${VIEW}
 export USE_PIP=${USE_PIP}
 
-./install_dependencies.sh --icon-repo ${ICON_REPO} --icon-branch ${ICON_BRANCH}  || exit 1
+source ${SETUP}
+./install_dependencies.sh || exit 1
 ./setup.sh || exit 1
 
 EOB
 
 chmod 755 ${BUILD_SCRIPT}
 
-if [[ "${SUBMIT}" == "true" ]]; then
-    ${SBATCH} ${BUILD_SCRIPT}
+if [ -n "${SUBMIT_ACCOUNT}" ]; then
+    sbatch ${BUILD_SCRIPT}
+    echo "build submitted, follow with the following command"
+    echo "tail -f $(realpath ${BUILD_LOG})"
 else
     COMMAND="uenv run ${UENV} --view ${VIEW} time ./${BUILD_SCRIPT}"
-    if [[ "${NOHUP}" == "true" ]]; then
+    if [ "${NOHUP}" == "true" ]; then
         WRAPPER_SCRIPT="wrapper.sh"
         echo ${COMMAND} > ${WRAPPER_SCRIPT}
         chmod 755 ${WRAPPER_SCRIPT}
-        nohup ./${WRAPPER_SCRIPT} 2>&1 > ${BUILD_SCRIPT%%.*}.o &
-        echo "running in the background, follow build with \"tail -f $(realpath ${BUILD_SCRIPT%%.*}.o)\""
+        nohup ./${WRAPPER_SCRIPT} 2>&1 > ${BUILD_LOG} &
+        echo "running in the background, follow build  with the following command"
+        echo "tail -f $(realpath ${BUILD_LOG})"
     else
-        ${COMMAND}
+        ${COMMAND} 2>&1 | tee ${BUILD_LOG}
     fi
 fi

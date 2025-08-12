@@ -1,10 +1,10 @@
-# Compiling icon-exclaim with Liskov substitution (Praveen K Pothapakula)
+# Compiling icon-exclaim with Liskov substitution
 
-These instructions are valid on `santis` out of the box. On `balfrin`, they require the installation of `uenv` version `7.0.0` and `uv`.
+The preferred strategy is the [launching script](#launching-script) described below.
 
 ## Clone this repo
 
-Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the wrapper script.
+Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the launching script approach.
 
 ## Step by step procedure
 
@@ -21,13 +21,18 @@ or
 uenv start icon-wcp/v1:rc4 --view=icon
 export VIEW=icon
 ```
-2. Install dependencies
-
+2. source setup
 ``` shell
-./install_dependencies.sh [OPTIONS]
+source MY_SETUP.sh
 ```
 
-3. Configure and build
+3. Install dependencies
+
+``` shell
+./install_dependencies.sh
+```
+
+4. Configure and build
 
 ``` shell
 ./setup.sh
@@ -35,30 +40,29 @@ export VIEW=icon
 
 4. Check that the `build_dsl/bin/icon` executable was generated 
 
-## Run the wrapper script
+## Launching script
 
-The `launch_build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup`, choosing a working sub-directory or choosing alternative icon repo/branch
+The `launch_build_liskov.sh` script creates a working directory in a default location on `${SCRATCH}` and executes the previously described steps. It provides a series of handy options for selecting the setup, the uenv and view to be used, submitting the build to a compute node, running the build in the background on login nodes with `nohup` or choosing a working sub-directory
 
 Check the usage with `./launch_build_liskov.sh -h`
 
 ```
-❯ launch_build_liskov.sh -h
+❯ ./launch_build_liskov.sh -h
 
 Usage: launch_build_liskov.sh REQUIRED_PARAMETERS OPTIONS
 
 REQUIRED_PARAMETERS
+  --setup SETUP_FILE: use dependencies versions from SETUP_FILE
   -u UENV,--uenv=UENV: activate UENV when building
   -v VIEW,--view=VIEW: Use the view VIEW of UENV
 
 OPTIONS
   -h,--help: print this help
-  -n,--nohup: run in the background. Caution: process cannot be stopped
+  -n,--nohup: run in the background. CAUTION: process cannot be stoped
+  --use-pip: use pip instead of uv
   -s,--submit: submit build to compute node
   -a ACCOUNT,--account=ACCOUNT: when submitting use ACCOUNT
-  -w WORKDIR,--workdir=WORKDIR: build in /capstor/scratch/cscs/leclairm/exclaim_compilation_liskov/WORKDIR
+  -w WORKDIR,--workdir=WORKDIR: build in ${SCRATCH}/exclaim_compilation_liskov/WORKDIR
                                 otherwise directly in ${SCRATCH}/exclaim_compilation_liskov
-  --icon-repo=ICON_REPO: provide an icon repository (default: git@github.com:C2SM/icon-exclaim.git)
-  --icon-branch=ICON_BRANCH: provide an icon branch (default: reverse_advection)
-                             required when using --icon-repo
 ```
 

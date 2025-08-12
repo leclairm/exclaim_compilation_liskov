@@ -39,14 +39,15 @@ DSL_LDFLAGS="-L${UENV_VIEW_PATH}/lib64 -L${UENV_VIEW_PATH}/lib"
 LIBS="-L${CUDA_HOME}/lib64 -lcudart -Wl,--as-needed ${XML2_LIBS} ${BLAS_LAPACK_LIBS} ${SERIALBOX2_LIBS} ${STDCPP_LIBS} ${NETCDF_LIBS}"
 
 # CUDAARCHS is machine dependent
-if [[ "${HOSTNAME}" == balfrin* ]]; then
-    CUDAARCHS='80'
-elif [[ "${HOSTNAME}" == santis* ]]; then
-    CUDAARCHS='90'
-else
-    echo "unsupported host ${HOSTNAME}"
-    exit 1
-fi
+# if [[ "${HOSTNAME}" == balfrin* ]]; then
+#     CUDAARCHS='80'
+# elif [[ "${HOSTNAME}" == santis* ]]; then
+#     CUDAARCHS='90'
+# else
+#     echo "unsupported host ${HOSTNAME}"
+#     exit 1
+# fi
+CUDAARCHS='90'
 # NVCC='nvcc'
 # -G seems to break the build, at least it does on tsa
 GT4PYNVCFLAGS='--std=c++17 -arch=sm_90 -g -O3 -lineinfo'
@@ -60,7 +61,7 @@ EXTRA_CONFIG_ARGS='--disable-loop-exchange --disable-ocean --enable-gpu=openacc+
 
 # Speed up the configuration by disabling MPI checks:
 EXTRA_CONFIG_ARGS+=' --disable-mpi-checks --disable-coupling'
-EXTRA_CONFIG_ARGS+=' --disable-rpaths --enable-atmo --enable-les --enable-upatmo --disable-jsbach --disable-waves --disable-aes  --disable-rttov --enable-acm-license --enable-mpi  --disable-openmp --enable-realloc-buf  --disable-parallel-netcdf --disable-sct --disable-yaxt --disable-testbed --disable-vectorized-lrtm --disable-mixed-precision --enable-pgi-inlib --disable-nccl --disable-cuda-graphs --enable-silent-rules --disable-serialization --enable-mpi-gpu'
+EXTRA_CONFIG_ARGS+=" --disable-rpaths --enable-atmo --enable-les --enable-upatmo ${JSBACH:---disable-jsbach} --disable-waves --disable-aes  --disable-rttov --enable-acm-license --enable-mpi  --disable-openmp --enable-realloc-buf  --disable-parallel-netcdf --disable-sct --disable-yaxt --disable-testbed --disable-vectorized-lrtm --disable-mixed-precision --enable-pgi-inlib --disable-nccl --disable-cuda-graphs --enable-silent-rules --disable-serialization --enable-mpi-gpu"
 
 # [DSL] In order to enable DSL verification mode, pass --enable-dsl-verify to this script
 
