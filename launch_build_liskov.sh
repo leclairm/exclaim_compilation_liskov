@@ -93,7 +93,8 @@ fi
 echo ""
 
 mkdir -p ${WORK_DIR}
-rm -rf ${WORK_DIR}/*
+rm -rf ${WORK_DIR}/.[^.]
+rm -rf ${WORK_DIR}/.??*
 
 rsync -av --delete --exclude $(basename $0) --exclude README.md --exclude ".*" ./ ${WORK_DIR}/
 
