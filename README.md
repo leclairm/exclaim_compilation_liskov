@@ -14,9 +14,9 @@ Somewhere on `${SCRATCH}` for the step by step procedure, anywhere else for the 
 
 1.  Start a user environment with the correct view activated, e.g. `uenv start icon/25.2:v3 --view=default` or `uenv start icon-wcp/v1:rc4 --view=icon`
 
-2. source setup
+2. source your setup
 ``` shell
-source MY_SETUP.sh
+source my_setup.sh
 ```
 
 3. Install dependencies
@@ -53,7 +53,7 @@ OPTIONS
   -h, --help: print this help
   -n, --nohup: run in the background. CAUTION: process cannot be stoped
   --use-pip: use pip instead of uv
-  --submit ACCOUNT: submit build to compute node and use ACCOUNT
+  --submit=ACCOUNT: submit build to compute node and use ACCOUNT
   -w WORKDIR, --workdir=WORKDIR: build in ${SCRATCH}/exclaim_compilation_liskov/WORKDIR
                                  otherwise directly in ${SCRATCH}/exclaim_compilation_liskov
 ```

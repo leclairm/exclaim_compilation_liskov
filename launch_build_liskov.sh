@@ -20,7 +20,7 @@ usage(){
     echo "  -h, --help: print this help"
     echo "  -n, --nohup: run in the background. CAUTION: process cannot be stoped"
     echo "  --use-pip: use pip instead of uv"
-    echo "  --submit ACCOUNT: submit build to compute node and use ACCOUNT"
+    echo "  --submit=ACCOUNT: submit build to compute node and use ACCOUNT"
     echo "  -w WORKDIR, --workdir=WORKDIR: build in ${ROOT_WORK_DIR_ESC}/WORKDIR"
     echo "                                 otherwise directly in ${ROOT_WORK_DIR_ESC}"
     echo ""
